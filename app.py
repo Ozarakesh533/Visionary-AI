@@ -10,6 +10,9 @@ import io
 import base64
 import os
 
+# ✅ Move this to the top before any Streamlit commands
+st.set_page_config(page_title="EyeGuide AI", layout="wide", page_icon="🤖")
+
 # Set Tesseract command for local testing (Windows)
 pytesseract.pytesseract.tesseract_cmd = r"C:/Users/Lenovo/AppData/Local/Programs/Python/Python312/Scripts/pytesseract.exe"
 
@@ -77,8 +80,6 @@ def detect_and_highlight_objects(image):
 
 # Main app function
 def main():
-    st.set_page_config(page_title="EyeGuide AI", layout="wide", page_icon="🤖")
-
     # Sidebar
     with st.sidebar:
         st.sidebar.title("🔧 Features")
