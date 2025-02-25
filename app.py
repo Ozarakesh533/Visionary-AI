@@ -10,20 +10,24 @@ import io
 import base64
 import os
 
+# ✅ Ensure set_page_config is the first Streamlit command
+st.set_page_config(page_title="EyeGuide AI", layout="wide", page_icon="🤖")
+
 # Set Tesseract command for local testing (Windows)
 pytesseract.pytesseract.tesseract_cmd = r"C:/Users/Lenovo/AppData/Local/Programs/Python/Python312/Scripts/pytesseract.exe"
 
-# Load Google Gemini API Key
+# ✅ Load Google Gemini API Key safely
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-if not GOOGLE_API_KEY:
-    try:
-        with open("key.txt", "r") as file:
-            GOOGLE_API_KEY = file.read().strip()
-    except FileNotFoundError:
-        GOOGLE_API_KEY = None
-        st.error("Error: API key file not found. Please provide a valid API key.")
 
-# Initialize the Gemini model only if the API key is available
+if not GOOGLE_API_KEY:
+    key_file_path = "key.txt"
+    if os.path.exists(key_file_path):
+        with open(key_file_path, "r") as file:
+            GOOGLE_API_KEY = file.read().strip()
+    else:
+        st.warning("⚠️ API key not found! Please set GOOGLE_API_KEY as an environment variable or provide a valid key.txt file.")
+
+# ✅ Initialize the Gemini model only if API key is available
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=GOOGLE_API_KEY) if GOOGLE_API_KEY else None
 
 # Function to convert an image to Base64 format
@@ -77,8 +81,6 @@ def detect_and_highlight_objects(image):
 
 # Main app function
 def main():
-    st.set_page_config(page_title="EyeGuide AI", layout="wide", page_icon="🤖")
-
     # Sidebar
     with st.sidebar:
         st.sidebar.title("🔧 Features")
